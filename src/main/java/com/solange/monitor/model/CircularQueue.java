@@ -3,6 +3,7 @@ package com.solange.monitor.model;
 import java.util.OptionalDouble;
 import java.util.stream.Stream;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
@@ -15,10 +16,35 @@ public class CircularQueue {
 	private Long[] circularQueueElements;
 	private int maxSize; // Circular Queue maximum size
 	// statistics
-	private Double avg;
-	private Double max;
-	private Double min;
-	private Long count;
+	private Statistics statistics;
+	
+	
+	@Data
+	@AllArgsConstructor
+	class Statistics {
+
+		private Double avg;
+		private Double max;
+		private Double min;
+		private Long count;
+		
+		
+		/*public void remove(Double max, Double min, Double avg, Long count) {
+			count--;
+			// calculate avg again
+			this.avg = avg;
+			this.max = max;
+			this.min = min;
+		}*/
+
+		public void update(Double max, Double min, Double avg, Long count) {
+			this.count = count;
+			this.avg = avg;
+			this.max = max;
+			this.min = min;
+		}
+	}
+	
 
 	public CircularQueue(int maxSize) {
 		super();
@@ -29,11 +55,7 @@ public class CircularQueue {
 			this.circularQueueElements[i] = 0L;
 		}
 
-		max = 0.0;
-		min = 0.0;
-		count = 0L;
-		avg = 0.0;
-
+		statistics = new Statistics(0.0, 0.0, 0.0, 0L);
 	}
 
 	private Double calculateMax() {
@@ -56,9 +78,10 @@ public class CircularQueue {
 	}
 
 	private void removeFromStatistics(Long value) {
-		count--;
 		// calculate avg again
-		avg = calculateAvg();
+		Double max = statistics.getMax();
+		Double min = statistics.getMin();
+		Double avg = calculateAvg();
 		// if value == max OR == min
 		if (max == value.doubleValue()) {
 			max = calculateMax();
@@ -66,13 +89,19 @@ public class CircularQueue {
 		if (min == value.doubleValue()) {
 			min = calculateMin();
 		}
+
+		statistics.update(max, min, avg, statistics.getCount() - 1);
 	}
 
-	/**
-	 * Sets values to -1
-	 * 
-	 * @param position
-	 */
+	private void updateStatistics() {
+
+		Double max = calculateMax();
+		Double min = calculateMin();
+		Double avg = calculateAvg();
+
+		statistics.update(max, min, avg, statistics.getCount() + 1);
+	}
+
 	public void cleanValue(int position) {
 		if (position < circularQueueElements.length) {
 			// if
@@ -88,23 +117,10 @@ public class CircularQueue {
 		}
 	}
 
-	/**
-	 * Set position to this value
-	 * 
-	 * @param value
-	 * @param position
-	 */
 	public void setValue(Long value, int position) {
 		if (position < circularQueueElements.length) {
 			circularQueueElements[position] = value;
 		}
 		updateStatistics();
-	}
-
-	private void updateStatistics() {
-		count++;
-		avg = calculateAvg();
-		max = calculateMax();
-		min = calculateMin();
 	}
 }

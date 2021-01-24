@@ -17,10 +17,10 @@ class CircularQueueTest {
 	@Test
 	void testEmptyQueueStatistics() {
 		
-		assertEquals(0.0, q.getMax());
-		assertEquals(0.0, q.getMin());
-		assertEquals(0.0, q.getAvg());
-		assertEquals(0L, q.getCount());
+		assertEquals(0.0, q.getStatistics().getMax());
+		assertEquals(0.0, q.getStatistics().getMin());
+		assertEquals(0.0, q.getStatistics().getAvg());
+		assertEquals(0L, q.getStatistics().getCount());
 	}
 	
 	
@@ -32,10 +32,10 @@ class CircularQueueTest {
 
 		q.setValue(5L, 5);
 		
-		assertEquals(5.0, q.getMax());
-		assertEquals(5.0, q.getMin());
-		assertEquals(5.0, q.getAvg());
-		assertEquals(1L, q.getCount());
+		assertEquals(5.0, q.getStatistics().getMax());
+		assertEquals(5.0, q.getStatistics().getMin());
+		assertEquals(5.0, q.getStatistics().getAvg());
+		assertEquals(1L, q.getStatistics().getCount());
 	}
 	
 	@Test
@@ -45,17 +45,17 @@ class CircularQueueTest {
 		q.setValue(10L, 6);
 		q.setValue(20L, 9);
 		
-		assertEquals(20.0, q.getMax());
-		assertEquals(5.0, q.getMin());
-		assertEquals(11.67, Math.round(q.getAvg()),2);
-		assertEquals(3L, q.getCount());
+		assertEquals(20.0, q.getStatistics().getMax());
+		assertEquals(5.0, q.getStatistics().getMin());
+		assertEquals(11.67, Math.round(q.getStatistics().getAvg()),2);
+		assertEquals(3L, q.getStatistics().getCount());
 		
 		q.cleanValue(5);
 		
-		assertEquals(20.0, q.getMax());
-		assertEquals(10.0, q.getMin());
-		assertEquals(15, q.getAvg());
-		assertEquals(2L, q.getCount());
+		assertEquals(20.0, q.getStatistics().getMax());
+		assertEquals(10.0, q.getStatistics().getMin());
+		assertEquals(15, q.getStatistics().getAvg());
+		assertEquals(2L, q.getStatistics().getCount());
 	}
 
 }
