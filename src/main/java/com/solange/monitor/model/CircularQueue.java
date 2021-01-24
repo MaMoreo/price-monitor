@@ -13,29 +13,24 @@ import lombok.Data;
 @Data
 public class CircularQueue {
 
-	private Long[] circularQueueElements;
+	private Double[] circularQueueElements;
 	private int maxSize; // Circular Queue maximum size
 	// statistics
 	private Statistics statistics;
-	
-	
+
 	@Data
 	@AllArgsConstructor
-	class Statistics {
+	public class Statistics {
 
 		private Double avg;
 		private Double max;
 		private Double min;
 		private Long count;
-		
-		
-		/*public void remove(Double max, Double min, Double avg, Long count) {
-			count--;
-			// calculate avg again
-			this.avg = avg;
-			this.max = max;
-			this.min = min;
-		}*/
+
+		/*
+		 * public void remove(Double max, Double min, Double avg, Long count) { count--;
+		 * // calculate avg again this.avg = avg; this.max = max; this.min = min; }
+		 */
 
 		public void update(Double max, Double min, Double avg, Long count) {
 			this.count = count;
@@ -44,15 +39,14 @@ public class CircularQueue {
 			this.min = min;
 		}
 	}
-	
 
 	public CircularQueue(int maxSize) {
 		super();
 		this.maxSize = maxSize;
-		this.circularQueueElements = new Long[this.maxSize];
+		this.circularQueueElements = new Double[this.maxSize];
 
 		for (int i = 0; i < maxSize; i++) {
-			this.circularQueueElements[i] = 0L;
+			this.circularQueueElements[i] = 0.0;
 		}
 
 		statistics = new Statistics(0.0, 0.0, 0.0, 0L);
@@ -60,24 +54,24 @@ public class CircularQueue {
 
 	private Double calculateMax() {
 
-		Long max = Stream.of(circularQueueElements).mapToLong(v -> v).max().orElse(0);
+		Double max = Stream.of(circularQueueElements).mapToDouble(v -> v).max().orElse(0);
 		return max.doubleValue();
 	}
 
 	private Double calculateMin() {
-		Long orElse = Stream.of(circularQueueElements).mapToLong(v -> v).filter(l -> l != 0L).min().orElse(0);
+		Double orElse = Stream.of(circularQueueElements).mapToDouble(v -> v).filter(l -> l != 0.0).min().orElse(0);
 		return orElse.doubleValue();
 	}
 
 	private Double calculateAvg() {
 
-		OptionalDouble optionalDouble = Stream.of(circularQueueElements).mapToLong(v -> v).filter(l -> l != 0L)
+		OptionalDouble optionalDouble = Stream.of(circularQueueElements).mapToDouble(v -> v).filter(l -> l != 0.0)
 				.average();
 
 		return optionalDouble.isPresent() ? optionalDouble.getAsDouble() : 0.0;
 	}
 
-	private void removeFromStatistics(Long value) {
+	private void removeFromStatistics(Double value) {
 		// calculate avg again
 		Double max = statistics.getMax();
 		Double min = statistics.getMin();
@@ -107,17 +101,17 @@ public class CircularQueue {
 			// if
 			if (circularQueueElements[position] != 0) {
 				// update Statistics (Remove)
-				Long value = circularQueueElements[position];
-				circularQueueElements[position] = 0L;
+				Double value = circularQueueElements[position];
+				circularQueueElements[position] = 0.0;
 				removeFromStatistics(value);
 			} else {
 
-				circularQueueElements[position] = 0L;
+				circularQueueElements[position] = 0.0;
 			}
 		}
 	}
 
-	public void setValue(Long value, int position) {
+	public void setValue(Double value, int position) {
 		if (position < circularQueueElements.length) {
 			circularQueueElements[position] = value;
 		}

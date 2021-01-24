@@ -30,7 +30,7 @@ class CircularQueueTest {
 	@Test
 	void testOneValueQueueStatistics() {
 
-		q.setValue(5L, 5);
+		q.setValue(5.0, 5);
 		
 		assertEquals(5.0, q.getStatistics().getMax());
 		assertEquals(5.0, q.getStatistics().getMin());
@@ -41,13 +41,13 @@ class CircularQueueTest {
 	@Test
 	void testValuesQueueStatistics() {
 
-		q.setValue(5L, 5);
-		q.setValue(10L, 6);
-		q.setValue(20L, 9);
+		q.setValue(5.0, 5);
+		q.setValue(10.0, 6);
+		q.setValue(20.0, 9);
 		
 		assertEquals(20.0, q.getStatistics().getMax());
 		assertEquals(5.0, q.getStatistics().getMin());
-		assertEquals(11.67, Math.round(q.getStatistics().getAvg()),2);
+		assertEquals(11.67, Math.round(q.getStatistics().getAvg()), 2);
 		assertEquals(3L, q.getStatistics().getCount());
 		
 		q.cleanValue(5);
