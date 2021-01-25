@@ -6,6 +6,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -14,8 +15,8 @@ import com.solange.monitor.services.MonitorService;
 @Component
 public class Scheduler implements CommandLineRunner {
 
-	
-	private static final int MAX_SIZE = 60; // FIXME move to a property @Value
+	@Value("${seconds.max.size:60}")
+	private int MAX_SIZE;
 	
 	@Autowired
 	private MonitorService monitor;

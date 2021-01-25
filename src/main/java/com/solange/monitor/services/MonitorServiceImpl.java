@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.solange.monitor.domain.Tick;
@@ -14,12 +15,15 @@ import com.solange.monitor.model.CircularQueue;
 import com.solange.monitor.model.CircularQueue.Statistics;
 
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Data
+@Slf4j
 public class MonitorServiceImpl implements MonitorService {
 
-	private static final Integer MAX_SIZE = 60;
+	@Value("${seconds.max.size:60}")
+	private static Integer MAX_SIZE;
 
 	private CircularQueue.Statistics globalStatistics = new CircularQueue(0).getStatistics();
 
@@ -133,8 +137,7 @@ public class MonitorServiceImpl implements MonitorService {
 		Timestamp now = Timestamp.valueOf(LocalDateTime.now());
 		Timestamp sixtySecondsAgo = new Timestamp(now.getTime() - 60 * 1000);
 
-		boolean result = t.before(now) && t.after(sixtySecondsAgo);
-		return result;
+		return t.before(now) && t.after(sixtySecondsAgo);
 	}
 
 	@Override
@@ -144,7 +147,7 @@ public class MonitorServiceImpl implements MonitorService {
 			CircularQueue elements = entry.getValue();
 			Optional<Statistics> localStatistics = elements.cleanValue(counter);
 			if (localStatistics.isPresent()) {
-				System.out.println("CLEANED QUEUE: " + entry.getKey() + " position: " + counter);
+				log.debug("CLEANED QUEUE: " + entry.getKey() + " position: " + counter);
 				updateGlobalStatisticsAfterClean();
 			}
 		}
