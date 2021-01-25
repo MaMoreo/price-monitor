@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
- * This is NOT a QUEUE
+ * Simulates a Circular Queue
  * 
  */
 @Data
@@ -27,11 +27,6 @@ public class CircularQueue {
 		private Double max;
 		private Double min;
 		private Long count;
-
-		/*
-		 * public void remove(Double max, Double min, Double avg, Long count) { count--;
-		 * // calculate avg again this.avg = avg; this.max = max; this.min = min; }
-		 */
 
 		public void update(Double max, Double min, Double avg, Long count) {
 			this.count = count;
@@ -55,18 +50,29 @@ public class CircularQueue {
 
 	private Double calculateMax() {
 
-		Double max = Stream.of(circularQueueElements).mapToDouble(v -> v).max().orElse(0);
+		Double max = Stream.of(circularQueueElements) //
+				.mapToDouble(v -> v) //
+				.max() //
+				.orElse(0); //
+		
 		return max.doubleValue();
 	}
 
 	private Double calculateMin() {
-		Double orElse = Stream.of(circularQueueElements).mapToDouble(v -> v).filter(l -> l != 0.0).min().orElse(0);
+		Double orElse = Stream.of(circularQueueElements) //
+				.mapToDouble(v -> v) //
+				.filter(l -> l != 0.0) //
+				.min() //
+				.orElse(0);
+		
 		return orElse.doubleValue();
 	}
 
 	private Double calculateAvg() {
 
-		OptionalDouble optionalDouble = Stream.of(circularQueueElements).mapToDouble(v -> v).filter(l -> l != 0.0)
+		OptionalDouble optionalDouble = Stream.of(circularQueueElements) //
+				.mapToDouble(v -> v) //
+				.filter(l -> l != 0.0) //
 				.average();
 
 		return optionalDouble.isPresent() ? optionalDouble.getAsDouble() : 0.0;
@@ -97,7 +103,7 @@ public class CircularQueue {
 		statistics.update(max, min, avg, statistics.getCount() + 1);
 	}
 
-	public Optional<Statistics> cleanValue(int position) {
+	public synchronized Optional<Statistics> cleanValue(int position) {
 		if (position < circularQueueElements.length) {
 			// if
 			if (circularQueueElements[position] != 0) {
@@ -115,7 +121,7 @@ public class CircularQueue {
 		return Optional.empty();
 	}
 
-	public void setValue(Double value, int position) {
+	public synchronized void setValue(Double value, int position) {
 		if (position < circularQueueElements.length) {
 			circularQueueElements[position] = value;
 		}

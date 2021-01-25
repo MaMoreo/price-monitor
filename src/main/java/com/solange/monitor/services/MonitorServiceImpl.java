@@ -46,7 +46,7 @@ public class MonitorServiceImpl implements MonitorService {
 	}
 
 	@Override
-	public Statistics addTickToInstrument(String identifier, Double price, int second) {
+	public synchronized Statistics addTickToInstrument(String identifier, Double price, int second) {
 		if (!monitor.containsKey(identifier)) {
 			monitor.put(identifier, new CircularQueue(MAX_SIZE));
 		}
@@ -138,7 +138,7 @@ public class MonitorServiceImpl implements MonitorService {
 	}
 
 	@Override
-	public void cleanValue(int counter) {
+	public synchronized void cleanValue(int counter) {
 		for (Map.Entry<String, CircularQueue> entry : monitor.entrySet()) {
 
 			CircularQueue elements = entry.getValue();

@@ -1,5 +1,6 @@
 package com.solange.monitor.bootstrap;
 
+import java.time.LocalDateTime;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -24,15 +25,14 @@ public class Scheduler implements CommandLineRunner {
 
 		Runnable slidingWindow = new Runnable() {
 
-			//CircularQueue queue = new CircularQueue(MAX_SIZE);
-			int counter = 0;  // FIXME: starts in second from NOW
-
+			// Sixty Seconds Ago
+			int second = (LocalDateTime.now().getSecond() + 1) % (MAX_SIZE ) ;  
+			
+			
 			public void run() {
-			//	System.out.println( monitor.getStatisticsForAllInstrument());
-				monitor.cleanValue(counter);
-				//queue.cleanValue(counter);
-				counter = (counter + 1 ) % MAX_SIZE;
-				//System.out.println(queue.toString());
+				//System.out.println("To clean: " +  second + " NOW: " +  LocalDateTime.now().getSecond());
+				monitor.cleanValue(second);
+				second = (second + 1 ) % MAX_SIZE;
 			}
 		};
 
