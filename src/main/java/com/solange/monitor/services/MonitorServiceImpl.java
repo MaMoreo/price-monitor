@@ -1,11 +1,14 @@
 package com.solange.monitor.services;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
 
+import com.solange.monitor.domain.Tick;
 import com.solange.monitor.model.CircularQueue;
 import com.solange.monitor.model.CircularQueue.Statistics;
 
@@ -23,6 +26,8 @@ public class MonitorServiceImpl implements MonitorService {
 	// CircularQueue is the Object with the statistics
 	private Map<String, CircularQueue> monitor = new HashMap<>();
 
+	private Tick block;
+
 	@Override
 	public CircularQueue.Statistics getStatisticsForInstrument(String identifier) {
 
@@ -31,7 +36,7 @@ public class MonitorServiceImpl implements MonitorService {
 			return queue.getStatistics();
 		}
 
-		return null;
+		return monitor.get(identifier).getStatistics();
 	}
 
 	@Override
@@ -65,7 +70,6 @@ public class MonitorServiceImpl implements MonitorService {
 			
 			CircularQueue elements = entry.getValue();
 
-			//globalAvg += value.getStatistics().getAvg();
 			globalAvg +=  Stream.of(elements.getCircularQueueElements())
 					.mapToDouble(v -> v)
 					.filter(l -> l != 0.0)
@@ -73,7 +77,17 @@ public class MonitorServiceImpl implements MonitorService {
 			
 		}
 
-		globalAvg = globalAvg/ globalStatistics.getCount();  // / monitor.size();
+		globalAvg = globalAvg/ globalStatistics.getCount();
 		globalStatistics.setAvg(globalAvg);
+	}
+
+	@Override
+	public boolean acceptTick(Tick tick) {
+		Timestamp t = new Timestamp(tick.getTimestamp());
+		Timestamp now = Timestamp.valueOf(LocalDateTime.now());
+		Timestamp sixtySecondsAgo = new Timestamp(now.getTime() - 60 * 1000);
+		
+		boolean result =  t.before(now) && t.after(sixtySecondsAgo);
+		return result;
 	}
 }
