@@ -10,5 +10,5 @@ public interface MonitorService {
 	CircularQueue.Statistics getStatisticsForAllInstrument();
 	Statistics addTickToInstrument(String identifier, Double price, int second);
 	boolean acceptTick(Tick tick);
-
+	void cleanValue(int counter);
 }

@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
@@ -52,12 +53,16 @@ public class MonitorServiceImpl implements MonitorService {
 
 		monitor.get(identifier).setValue(price, second);
 		Statistics statistics = monitor.get(identifier).getStatistics();
-		updateGlobalStatistics(statistics);
+		updateGlobalStatisticsAfterAdd(statistics);
 		return statistics;
 	}
 
-	private void updateGlobalStatistics(Statistics localStatistics) {
+	private void updateGlobalStatisticsAfterAdd(Statistics localStatistics) {
 		globalStatistics.setCount(globalStatistics.getCount() + 1);
+		updateGlobalStatistics(localStatistics);
+	}
+
+	private void updateGlobalStatistics(Statistics localStatistics) {
 		if (globalStatistics.getMax() < localStatistics.getMax()) {
 			globalStatistics.setMax(localStatistics.getMax());
 		}
@@ -67,17 +72,58 @@ public class MonitorServiceImpl implements MonitorService {
 
 		Double globalAvg = 0.0;
 		for (Map.Entry<String, CircularQueue> entry : monitor.entrySet()) {
-			
+
 			CircularQueue elements = entry.getValue();
 
-			globalAvg +=  Stream.of(elements.getCircularQueueElements())
-					.mapToDouble(v -> v)
-					.filter(l -> l != 0.0)
-					.sum();
-			
+			globalAvg += Stream.of(elements.getCircularQueueElements()).mapToDouble(v -> v).filter(l -> l != 0.0).sum();
+
 		}
 
-		globalAvg = globalAvg/ globalStatistics.getCount();
+		globalAvg = globalAvg / globalStatistics.getCount();
+		globalStatistics.setAvg(globalAvg);
+	}
+
+	private void updateGlobalStatisticsAfterClean() {
+		globalStatistics.setCount(globalStatistics.getCount() - 1);
+
+		Double globalMax = 0.0;
+		for (Map.Entry<String, CircularQueue> entry : monitor.entrySet()) {
+
+			CircularQueue elements = entry.getValue();
+			if (elements.getStatistics().getMax() > globalMax) {
+				globalMax = elements.getStatistics().getMax();
+			}
+		}
+
+		globalStatistics.setMax(globalMax);
+
+		
+		Double globalMin = Double.MAX_VALUE;
+		for (Map.Entry<String, CircularQueue> entry : monitor.entrySet()) {
+
+			CircularQueue elements = entry.getValue();
+			if (elements.getStatistics().getMin() < globalMin) {
+				globalMin = elements.getStatistics().getMin();
+			}
+		}
+
+		globalStatistics.setMin(globalMin);
+		
+		
+		
+		Double globalAvg = 0.0;
+		for (Map.Entry<String, CircularQueue> entry : monitor.entrySet()) {
+
+			CircularQueue elements = entry.getValue();
+
+			globalAvg += Stream.of(elements.getCircularQueueElements()).mapToDouble(v -> v).filter(l -> l != 0.0).sum();
+
+		}
+
+		globalAvg = globalAvg / globalStatistics.getCount();
+		if (globalAvg.isNaN()) {
+			globalAvg = 0.0;
+		}
 		globalStatistics.setAvg(globalAvg);
 	}
 
@@ -86,8 +132,21 @@ public class MonitorServiceImpl implements MonitorService {
 		Timestamp t = new Timestamp(tick.getTimestamp());
 		Timestamp now = Timestamp.valueOf(LocalDateTime.now());
 		Timestamp sixtySecondsAgo = new Timestamp(now.getTime() - 60 * 1000);
-		
-		boolean result =  t.before(now) && t.after(sixtySecondsAgo);
+
+		boolean result = t.before(now) && t.after(sixtySecondsAgo);
 		return result;
+	}
+
+	@Override
+	public void cleanValue(int counter) {
+		for (Map.Entry<String, CircularQueue> entry : monitor.entrySet()) {
+
+			CircularQueue elements = entry.getValue();
+			Optional<Statistics> localStatistics = elements.cleanValue(counter);
+			if (localStatistics.isPresent()) {
+				System.out.println("CLEANED QUEUE: " + entry.getKey() + " position: " + counter);
+				updateGlobalStatisticsAfterClean();
+			}
+		}
 	}
 }

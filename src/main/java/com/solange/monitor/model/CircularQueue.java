@@ -1,5 +1,6 @@
 package com.solange.monitor.model;
 
+import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.stream.Stream;
 
@@ -96,7 +97,7 @@ public class CircularQueue {
 		statistics.update(max, min, avg, statistics.getCount() + 1);
 	}
 
-	public void cleanValue(int position) {
+	public Optional<Statistics> cleanValue(int position) {
 		if (position < circularQueueElements.length) {
 			// if
 			if (circularQueueElements[position] != 0) {
@@ -104,11 +105,14 @@ public class CircularQueue {
 				Double value = circularQueueElements[position];
 				circularQueueElements[position] = 0.0;
 				removeFromStatistics(value);
+				return Optional.of(this.statistics);
 			} else {
 
 				circularQueueElements[position] = 0.0;
+
 			}
 		}
+		return Optional.empty();
 	}
 
 	public void setValue(Double value, int position) {
