@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 public class MonitorServiceImpl implements MonitorService {
 
 	@Value("${seconds.max.size:60}")
-	private static Integer MAX_SIZE;
+	private Integer maxSize;
 
 	private CircularQueue.Statistics globalStatistics = new CircularQueue(0).getStatistics();
 
@@ -31,7 +31,7 @@ public class MonitorServiceImpl implements MonitorService {
 	// CircularQueue is the Object with the statistics
 	private Map<String, CircularQueue> monitor = new HashMap<>();
 
-	private Tick block;
+	private Tick tick;
 
 	@Override
 	public CircularQueue.Statistics getStatisticsForInstrument(String identifier) {
@@ -52,7 +52,7 @@ public class MonitorServiceImpl implements MonitorService {
 	@Override
 	public synchronized Statistics addTickToInstrument(String identifier, Double price, int second) {
 		if (!monitor.containsKey(identifier)) {
-			monitor.put(identifier, new CircularQueue(MAX_SIZE));
+			monitor.put(identifier, new CircularQueue(maxSize));
 		}
 
 		monitor.get(identifier).setValue(price, second);

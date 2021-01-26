@@ -15,11 +15,13 @@ import com.solange.monitor.model.CircularQueue.Statistics;
 
 class MonitorServiceImplTest {
 
-	private MonitorService monitor;
+	private MonitorServiceImpl monitor;
 
 	@BeforeEach
 	void setUp() throws Exception {
 		monitor = new MonitorServiceImpl();
+		monitor.setMaxSize(60);
+		
 	}
 
 	@Test

@@ -24,9 +24,6 @@ class CircularQueueTest {
 	}
 	
 	
-	// ADD Swagger
-	// ADD Synchronized methods
-	
 	@Test
 	void testOneValueQueueStatistics() {
 
