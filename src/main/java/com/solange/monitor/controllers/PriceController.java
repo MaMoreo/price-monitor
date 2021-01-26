@@ -3,6 +3,7 @@ package com.solange.monitor.controllers;
 import java.sql.Timestamp;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,14 +38,18 @@ public class PriceController {
 	}
 	
 	@PostMapping("/ticks")
-	public HttpStatus create(@RequestBody Tick tick){
+	public ResponseEntity<Mono<String>> create(@RequestBody Tick tick){
 		
-	/*	if (!monitorService.acceptTick(tick)){
-			return HttpStatus.NO_CONTENT;
-		}*/
+		if (!monitorService.acceptTick(tick)){
+			return ResponseEntity
+				      .status(HttpStatus.NO_CONTENT)
+				      .body(Mono.just("No Content"));
+		}
 
 		Timestamp t = new Timestamp(tick.getTimestamp());
 		monitorService.addTickToInstrument(tick.getInstrument(), tick.getPrice(), t.toLocalDateTime().getSecond()) ;
-		return HttpStatus.OK;
+		return ResponseEntity
+			      .status(HttpStatus.OK)
+			      .body(Mono.just("OK"));
 	}
 }

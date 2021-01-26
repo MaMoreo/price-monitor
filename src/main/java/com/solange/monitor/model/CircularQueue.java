@@ -9,14 +9,12 @@ import lombok.Data;
 
 /**
  * Simulates a Circular Queue
- * 
  */
 @Data
 public class CircularQueue {
 
 	private Double[] circularQueueElements;
 	private int maxSize; // Circular Queue maximum size
-	// statistics
 	private Statistics statistics;
 
 	@Data

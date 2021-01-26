@@ -74,47 +74,18 @@ public class MonitorServiceImpl implements MonitorService {
 			globalStatistics.setMin(localStatistics.getMin());
 		}
 
-		Double globalAvg = 0.0;
-		for (Map.Entry<String, CircularQueue> entry : monitor.entrySet()) {
-
-			CircularQueue elements = entry.getValue();
-
-			globalAvg += Stream.of(elements.getCircularQueueElements()).mapToDouble(v -> v).filter(l -> l != 0.0).sum();
-
-		}
-
-		globalAvg = globalAvg / globalStatistics.getCount();
-		globalStatistics.setAvg(globalAvg);
+		calculateGlobalAvg();
 	}
 
 	private void updateGlobalStatisticsAfterClean() {
+		
 		globalStatistics.setCount(globalStatistics.getCount() - 1);
+		calculateGlobalMax();
+		calculateGlobalMin();
+		calculateGlobalAvg();
+	}
 
-		Double globalMax = 0.0;
-		for (Map.Entry<String, CircularQueue> entry : monitor.entrySet()) {
-
-			CircularQueue elements = entry.getValue();
-			if (elements.getStatistics().getMax() > globalMax) {
-				globalMax = elements.getStatistics().getMax();
-			}
-		}
-
-		globalStatistics.setMax(globalMax);
-
-		
-		Double globalMin = Double.MAX_VALUE;
-		for (Map.Entry<String, CircularQueue> entry : monitor.entrySet()) {
-
-			CircularQueue elements = entry.getValue();
-			if (elements.getStatistics().getMin() < globalMin) {
-				globalMin = elements.getStatistics().getMin();
-			}
-		}
-
-		globalStatistics.setMin(globalMin);
-		
-		
-		
+	private void calculateGlobalAvg() {
 		Double globalAvg = 0.0;
 		for (Map.Entry<String, CircularQueue> entry : monitor.entrySet()) {
 
@@ -129,6 +100,32 @@ public class MonitorServiceImpl implements MonitorService {
 			globalAvg = 0.0;
 		}
 		globalStatistics.setAvg(globalAvg);
+	}
+
+	private void calculateGlobalMin() {
+		Double globalMin = Double.MAX_VALUE;
+		for (Map.Entry<String, CircularQueue> entry : monitor.entrySet()) {
+
+			CircularQueue elements = entry.getValue();
+			if (elements.getStatistics().getMin() < globalMin) {
+				globalMin = elements.getStatistics().getMin();
+			}
+		}
+
+		globalStatistics.setMin(globalMin);
+	}
+
+	private void calculateGlobalMax() {
+		Double globalMax = 0.0;
+		for (Map.Entry<String, CircularQueue> entry : monitor.entrySet()) {
+
+			CircularQueue elements = entry.getValue();
+			if (elements.getStatistics().getMax() > globalMax) {
+				globalMax = elements.getStatistics().getMax();
+			}
+		}
+
+		globalStatistics.setMax(globalMax);
 	}
 
 	@Override

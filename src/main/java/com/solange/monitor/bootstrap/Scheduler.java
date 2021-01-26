@@ -16,7 +16,7 @@ import com.solange.monitor.services.MonitorService;
 public class Scheduler implements CommandLineRunner {
 
 	@Value("${seconds.max.size:60}")
-	private int MAX_SIZE;
+	private int maxSize;
 	
 	@Autowired
 	private MonitorService monitor;
@@ -27,13 +27,11 @@ public class Scheduler implements CommandLineRunner {
 		Runnable slidingWindow = new Runnable() {
 
 			// Sixty Seconds Ago
-			int second = (LocalDateTime.now().getSecond() + 1) % (MAX_SIZE ) ;  
-			
+			int second = (LocalDateTime.now().getSecond() + 1) % (maxSize ) ;  
 			
 			public void run() {
-				//System.out.println("To clean: " +  second + " NOW: " +  LocalDateTime.now().getSecond());
 				monitor.cleanValue(second);
-				second = (second + 1 ) % MAX_SIZE;
+				second = (second + 1 ) % maxSize;
 			}
 		};
 
