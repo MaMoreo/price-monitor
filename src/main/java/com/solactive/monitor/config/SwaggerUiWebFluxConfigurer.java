@@ -1,4 +1,4 @@
-package com.solange.monitor.config;
+package com.solactive.monitor.config;
 
 import org.springframework.util.StringUtils;
 import org.springframework.web.reactive.config.ResourceHandlerRegistry;

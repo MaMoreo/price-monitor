@@ -1,4 +1,4 @@
-package com.solange.monitor.domain;
+package com.solactive.monitor.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

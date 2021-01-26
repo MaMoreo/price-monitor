@@ -1,4 +1,4 @@
-package com.solange.monitor.services;
+package com.solactive.monitor.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -10,8 +10,8 @@ import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.solange.monitor.domain.Tick;
-import com.solange.monitor.model.CircularQueue.Statistics;
+import com.solactive.monitor.domain.Tick;
+import com.solactive.monitor.model.CircularQueue.Statistics;
 
 class MonitorServiceImplTest {
 

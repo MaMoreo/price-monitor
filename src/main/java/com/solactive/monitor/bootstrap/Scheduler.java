@@ -1,4 +1,4 @@
-package com.solange.monitor.bootstrap;
+package com.solactive.monitor.bootstrap;
 
 import java.time.LocalDateTime;
 import java.util.concurrent.Executors;
@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import com.solange.monitor.services.MonitorService;
+import com.solactive.monitor.services.MonitorService;
 
 @Component
 public class Scheduler implements CommandLineRunner {

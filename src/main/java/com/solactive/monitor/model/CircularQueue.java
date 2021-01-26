@@ -1,4 +1,4 @@
-package com.solange.monitor.model;
+package com.solactive.monitor.model;
 
 import java.util.Optional;
 import java.util.OptionalDouble;

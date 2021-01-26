@@ -1,8 +1,8 @@
-package com.solange.monitor.services;
+package com.solactive.monitor.services;
 
-import com.solange.monitor.domain.Tick;
-import com.solange.monitor.model.CircularQueue;
-import com.solange.monitor.model.CircularQueue.Statistics;
+import com.solactive.monitor.domain.Tick;
+import com.solactive.monitor.model.CircularQueue;
+import com.solactive.monitor.model.CircularQueue.Statistics;
 
 public interface MonitorService {
 

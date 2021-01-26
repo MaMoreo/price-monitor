@@ -1,4 +1,4 @@
-package com.solange.monitor.model;
+package com.solactive.monitor.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

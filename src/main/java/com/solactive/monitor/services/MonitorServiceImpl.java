@@ -1,4 +1,4 @@
-package com.solange.monitor.services;
+package com.solactive.monitor.services;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -10,9 +10,9 @@ import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.solange.monitor.domain.Tick;
-import com.solange.monitor.model.CircularQueue;
-import com.solange.monitor.model.CircularQueue.Statistics;
+import com.solactive.monitor.domain.Tick;
+import com.solactive.monitor.model.CircularQueue;
+import com.solactive.monitor.model.CircularQueue.Statistics;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
