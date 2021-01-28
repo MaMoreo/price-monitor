@@ -108,13 +108,13 @@ class MonitorServiceImplTest {
 		Timestamp ninetySecondsAgo = new Timestamp(now.getTime() - 90 * 1000);
 		
 		assertTrue(monitor.acceptTick(
-				/*Mono.just*/(Tick.builder().timestamp(now.getTime()).build())));
+				(Tick.builder().timestamp(now.getTime()).build())));
 		assertTrue(monitor.acceptTick(
-				/*Mono.just*/(Tick.builder().timestamp(thirtySecondsAgo.getTime()).build())));
+				(Tick.builder().timestamp(thirtySecondsAgo.getTime()).build())));
 		assertFalse(monitor.acceptTick(
-				/*Mono.just*/(Tick.builder().timestamp(sixtySecondsAgo.getTime()).build())));
+				(Tick.builder().timestamp(sixtySecondsAgo.getTime()).build())));
 		assertFalse(monitor.acceptTick(
-				/*Mono.just*/(Tick.builder().timestamp(ninetySecondsAgo.getTime()).build())));
+				(Tick.builder().timestamp(ninetySecondsAgo.getTime()).build())));
 		
 	}
 }

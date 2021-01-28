@@ -132,9 +132,9 @@ public class MonitorServiceImpl implements MonitorService {
 	public boolean acceptTick(Tick tick) {
 		Timestamp t = new Timestamp(tick.getTimestamp());
 		Timestamp now = Timestamp.valueOf(LocalDateTime.now());
-		Timestamp sixtySecondsAgo = new Timestamp(now.getTime() - 60 * 1000);
+		Timestamp maxSecondsAgo = new Timestamp(now.getTime() - maxSize * 1000);
 
-		return t.before(now) && t.after(sixtySecondsAgo);
+		return t.before(now) && t.after(maxSecondsAgo);
 	}
 
 	@Override

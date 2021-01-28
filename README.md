@@ -25,7 +25,7 @@ To launch the project simply run the following command in a console.
 > ./gradlew bootRun
 
 ## RESTfull API
-Once the application is running point your broser to the following URL to access
+Once the application is running point your browser to the following URL to access
 the RESTfull API
 > http://localhost:8080/swagger-ui/
 
