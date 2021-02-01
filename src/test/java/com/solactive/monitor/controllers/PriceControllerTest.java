@@ -3,21 +3,18 @@ package com.solactive.monitor.controllers;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
-import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import com.solactive.monitor.domain.Tick;
 
 import reactor.core.publisher.Mono;
 
-@RunWith(SpringRunner.class)
+//@RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class PriceControllerTest {
 
@@ -30,18 +27,6 @@ class PriceControllerTest {
 	}
 	
 	
-	
-	@Ignore @Test
-	void testGetStatistics() {
-		
-	}
-
-	@Test
-	@Ignore
-	void testGetStatisticsForInstrument() {
-		//fail("Not yet implemented");
-	}
-
 	@Test
 	void testCreateTimeStampTooOld() {
 		

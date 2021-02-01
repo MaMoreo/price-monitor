@@ -4,7 +4,7 @@ A Real-Time Price Monitor
 
  * Uses WebFlux.
  * In-Memory solution (No-DB)
- * 
+
 
 
 ## Circle CI

@@ -26,6 +26,7 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'io.projectreactor:reactor-test'
 	implementation "io.springfox:springfox-boot-starter:3.0.0"
+	
 	compile group: 'net.bull.javamelody', name: 'javamelody-core', version: '1.81.0'
     compile group: 'com.thoughtworks.xstream', name: 'xstream', version: '1.4.10'
     compile group: 'org.jrobin', name: 'jrobin', version: '1.5.9'
