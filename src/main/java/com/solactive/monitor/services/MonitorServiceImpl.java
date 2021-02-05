@@ -8,24 +8,29 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
 import com.solactive.monitor.domain.Tick;
 import com.solactive.monitor.model.CircularQueue;
-import com.solactive.monitor.model.CircularQueue.Statistics;
+import com.solactive.monitor.model.Statistics;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
-@Service
+/**
+ * Problems with this implementation:
+ * <br>
+ * <li> It stores only ONE tick per second. This is not a restriction of the problem. </li>
+ * <li> {@link getStatistics/{identifier}} is O(1).  This is not a restriction of the problem. </li>
+ */
 @Data
 @Slf4j
+@Deprecated
 public class MonitorServiceImpl implements MonitorService {
 
 	@Value("${seconds.max.size:60}")
 	private Integer maxSize;
 
-	private CircularQueue.Statistics globalStatistics = new CircularQueue(0).getStatistics();
+	private Statistics globalStatistics = new CircularQueue(0).getStatistics();
 
 	// String is the identifier
 	// CircularQueue is the Object with the statistics
@@ -34,7 +39,7 @@ public class MonitorServiceImpl implements MonitorService {
 	private Tick tick;
 
 	@Override
-	public CircularQueue.Statistics getStatisticsForInstrument(String identifier) {
+	public Statistics getStatisticsForInstrument(String identifier) {
 
 		if (!monitor.containsKey(identifier)) {
 			CircularQueue queue = new CircularQueue(0);
@@ -49,7 +54,9 @@ public class MonitorServiceImpl implements MonitorService {
 		return globalStatistics;
 	}
 
+	/*
 	@Override
+	@Deprecated
 	public synchronized Statistics addTickToInstrument(String identifier, Double price, int second) {
 		if (!monitor.containsKey(identifier)) {
 			monitor.put(identifier, new CircularQueue(maxSize));
@@ -64,7 +71,7 @@ public class MonitorServiceImpl implements MonitorService {
 	private void updateGlobalStatisticsAfterAdd(Statistics localStatistics) {
 		globalStatistics.setCount(globalStatistics.getCount() + 1);
 		updateGlobalStatistics(localStatistics);
-	}
+	}*/
 
 	private void updateGlobalStatistics(Statistics localStatistics) {
 		if (globalStatistics.getMax() < localStatistics.getMax()) {
@@ -148,5 +155,10 @@ public class MonitorServiceImpl implements MonitorService {
 				updateGlobalStatisticsAfterClean();
 			}
 		}
+	}
+
+	@Override
+	public Statistics addTickToInstrument(Tick tick) {
+		return null;
 	}
 }
