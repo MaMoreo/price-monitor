@@ -1,7 +1,5 @@
 package com.solactive.monitor.controllers;
 
-import java.sql.Timestamp;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.solactive.monitor.domain.Tick;
-import com.solactive.monitor.model.CircularQueue;
+import com.solactive.monitor.model.Statistics;
 import com.solactive.monitor.services.MonitorService;
 
 import reactor.core.publisher.Mono;
@@ -28,12 +26,12 @@ public class PriceController {
 	
 	
 	@GetMapping("/statistics")
-	public Mono<CircularQueue.Statistics> getStatistics() {
+	public Mono<Statistics> getStatistics() {
 		return Mono.just(monitorService.getStatisticsForAllInstrument());
 	}
 	
 	@GetMapping("/statistics/{instrument_identifier}")
-	public Mono<CircularQueue.Statistics> getStatisticsForInstrument(@PathVariable("instrument_identifier" ) String identifier) {  
+	public Mono<Statistics> getStatisticsForInstrument(@PathVariable("instrument_identifier" ) String identifier) {  
 		return Mono.just(monitorService.getStatisticsForInstrument(identifier));
 	}
 	
@@ -46,8 +44,9 @@ public class PriceController {
 				      .body(Mono.just("No Content"));
 		}
 
-		Timestamp t = new Timestamp(tick.getTimestamp());
-		monitorService.addTickToInstrument(tick.getInstrument(), tick.getPrice(), t.toLocalDateTime().getSecond()) ;
+		//Timestamp t = new Timestamp(tick.getTimestamp());
+		//monitorService.addTickToInstrument(tick.getInstrument(), tick.getPrice(), t.toLocalDateTime().getSecond()) ;
+		monitorService.addTickToInstrument(tick);
 		return ResponseEntity
 			      .status(HttpStatus.OK)
 			      .body(Mono.just("OK"));

@@ -4,7 +4,6 @@ import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.stream.Stream;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
@@ -15,24 +14,8 @@ public class CircularQueue {
 
 	private Double[] circularQueueElements;
 	private int maxSize; // Circular Queue maximum size
-	private Statistics statistics;
+	private Statistics statistics = new Statistics();
 
-	@Data
-	@AllArgsConstructor
-	public class Statistics {
-
-		private Double avg;
-		private Double max;
-		private Double min;
-		private Long count;
-
-		public void update(Double max, Double min, Double avg, Long count) {
-			this.count = count;
-			this.avg = avg;
-			this.max = max;
-			this.min = min;
-		}
-	}
 
 	public CircularQueue(int maxSize) {
 		super();
